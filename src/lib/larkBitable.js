@@ -388,7 +388,7 @@ export async function fetchTenantAccessToken(prefix, appId, appSecret) {
     prefix,
   )
   if (json.code !== 0) {
-    throwLarkError(String(json.msg || `Lark rejected token (code ${json.code})`),, {
+    throwLarkError(String(json.msg || `Lark rejected token (code ${json.code})`), {
       step,
       url,
       method,
@@ -597,7 +597,7 @@ async function fetchExistingSignatures(prefix, token, baseAppToken, tableId, sig
       prefix,
     )
     if (json.code !== 0) {
-      throwLarkError(String(json.msg || `Lark read table code ${json.code}`),, {
+      throwLarkError(String(json.msg || `Lark read table code ${json.code}`), {
         step,
         url,
         method,

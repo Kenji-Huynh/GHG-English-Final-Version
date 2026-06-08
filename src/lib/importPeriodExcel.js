@@ -559,7 +559,7 @@ export async function importPeriodExcelAndApply(arrayBuffer, options = {}) {
 
   const totalAdded = addedEquip + addedTrips + addedCommutes
   if (totalAdded === 0 && !parsed.warnings.length) {
-    throw new Error('No valid data rows to import (file is empty or only contains template formulas?).'))
+    throw new Error('No valid data rows to import (file is empty or only contains template formulas?).')
   }
 
   return {
