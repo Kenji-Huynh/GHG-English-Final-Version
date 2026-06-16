@@ -97,26 +97,33 @@
   }
 
   async function onConfirmRow(row) {
-    if (!row.source?.trim()) {
+    const fresh = get(equipRows).find((r) => r.id === row.id) ?? row
+    if (!fresh.source?.trim()) {
       toastErr('Please select an emission source')
       return
     }
-    if (!row.ef || row.ef <= 0) {
+    if (!fresh.ef || fresh.ef <= 0) {
       toastErr('Please enter a valid emission factor (EF)')
       return
     }
-    if (!row.volume || row.volume <= 0) {
+    if (!fresh.volume || fresh.volume <= 0) {
       toastErr('Please enter a volume greater than 0')
       return
     }
-    if (!isValidCompany(row.company || defaultCompany)) {
+    if (!isValidCompany(fresh.company || defaultCompany)) {
       toastErr('Please select a company')
       return
     }
     const ok = await confirmAction('Add to summary?', '')
     if (!ok) return
-    updateEquip(row.id, 'confirmed', true)
+    updateEquip(fresh.id, 'confirmed', true)
     toastOk('Row added to the summary table below')
+  }
+
+  /** @param {string} id @param {string} raw */
+  function setEquipNumber(id, key, raw) {
+    const n = raw === '' ? 0 : Number(raw)
+    updateEquip(id, key, Number.isFinite(n) ? n : 0)
   }
 </script>
 
@@ -196,7 +203,7 @@
               type="text"
               placeholder="Air conditioner, generator..."
               value={row.equipment}
-              onchange={(e) => updateEquip(row.id, 'equipment', e.currentTarget.value)}
+              oninput={(e) => updateEquip(row.id, 'equipment', e.currentTarget.value)}
             />
             <select
               class="eq-span company-select"
@@ -232,14 +239,14 @@
               placeholder="EF"
               value={row.ef || ''}
               step="any"
-              onchange={(e) => updateEquip(row.id, 'ef', +e.currentTarget.value)}
+              oninput={(e) => setEquipNumber(row.id, 'ef', e.currentTarget.value)}
             />
             <input
               class="eq-span"
               type="text"
               placeholder="DEFRA 2023 / MONRE VN..."
               value={row.efRef}
-              onchange={(e) => updateEquip(row.id, 'efRef', e.currentTarget.value)}
+              oninput={(e) => updateEquip(row.id, 'efRef', e.currentTarget.value)}
             />
             <input
               type="number"
@@ -247,7 +254,7 @@
               value={row.volume || ''}
               min="0"
               step="any"
-              onchange={(e) => updateEquip(row.id, 'volume', +e.currentTarget.value)}
+              oninput={(e) => setEquipNumber(row.id, 'volume', e.currentTarget.value)}
             />
             <div class="eq-confirm-cell">
               <button
