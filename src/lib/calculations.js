@@ -1,4 +1,4 @@
-import { CABIN_OPTIONS, EMP_GROUND, HOTEL_OPTIONS } from './constants.js'
+import { CABIN_OPTIONS, EMP_GROUND, EV_DEFAULT_ENERGY_RATE, EV_GRID_EF, HOTEL_OPTIONS } from './constants.js'
 
 /**
  * @param {Array<{ km?: number, legs?: number, cabin?: number }>} legs
@@ -12,7 +12,7 @@ export function calcFlightLegsCO2(legs) {
 }
 
 /**
- * @param {Array<{ type?: string, km?: number, ef?: number, liters?: number, count?: number, groundEF?: number }>} segments
+ * @param {Array<{ type?: string, km?: number, ef?: number, liters?: number, count?: number, groundEF?: number, energyRate?: number, gridEF?: number }>} segments
  */
 export function calcOtherTransportsCO2(segments) {
   let total = 0
@@ -23,6 +23,11 @@ export function calcOtherTransportsCO2(segments) {
       total += Number(s.liters || 0) * 2.31 * n
     } else if (t === 'grab') {
       total += Number(s.km || 0) * 0.192 * n
+    } else if (t === 'ev') {
+      const km = Number(s.km || 0)
+      const rate = Number(s.energyRate ?? EV_DEFAULT_ENERGY_RATE)
+      const grid = Number(s.gridEF ?? EV_GRID_EF)
+      total += km * rate * grid * n
     } else if (t === 'ground' || t === 'car') {
       const ef = Number(s.ef ?? s.groundEF ?? 0.192)
       if (Number(s.liters || 0) > 0) total += Number(s.liters) * 2.31 * n
@@ -137,7 +142,7 @@ export function defaultCabinLabel(ef) {
   return o?.label ?? 'Economy'
 }
 
-/** @returns {{ id: string, type: string, km: number, ef: number, liters: number, count: number, note: string }} */
+/** @returns {{ id: string, type: string, km: number, ef: number, liters: number, count: number, note: string, energyRate: number, gridEF: number }} */
 export function newTransportSegment() {
   return {
     id: `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
@@ -147,6 +152,8 @@ export function newTransportSegment() {
     liters: 0,
     count: 1,
     note: '',
+    energyRate: EV_DEFAULT_ENERGY_RATE,
+    gridEF: EV_GRID_EF,
   }
 }
 

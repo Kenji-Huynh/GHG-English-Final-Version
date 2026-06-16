@@ -438,6 +438,25 @@
                 <input type="number" min="0" step="any" bind:value={seg.liters} />
                 <span class="unit">liters</span>
               </div>
+            {:else if seg.type === 'ev'}
+              <div class="field field-unit">
+                <label>Distance (per occurrence)</label>
+                <input type="number" min="0" step="any" bind:value={seg.km} />
+                <span class="unit">km</span>
+              </div>
+              <div class="field field-unit">
+                <label>Energy consumption rate</label>
+                <input type="number" min="0" step="any" bind:value={seg.energyRate} />
+                <span class="unit">kWh/km</span>
+              </div>
+              <div class="field field-unit">
+                <label>Grid emission factor</label>
+                <input type="number" min="0" step="any" bind:value={seg.gridEF} />
+                <span class="unit">kg CO₂e/kWh</span>
+              </div>
+              <p class="flight-legs-intro" style="grid-column: 1 / -1; margin: 0">
+                Emissions = distance × energy rate × grid EF × count
+              </p>
             {:else}
               <div class="field field-unit">
                 <label>Distance (per occurrence)</label>

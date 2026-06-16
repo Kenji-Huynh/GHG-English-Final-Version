@@ -69,11 +69,18 @@ export const COMMUTE_VEHICLES = [
 
 export const UNIT_OPTIONS = ['liters', 'kg', 'm³', 'kWh', 'GJ', 'tonnes', '—']
 
+/** kg CO₂e per kWh — Vietnam grid (MONRE VN 2022) */
+export const EV_GRID_EF = 0.4937
+
+/** Default EV energy use when not specified (kWh/km) */
+export const EV_DEFAULT_ENERGY_RATE = 0.18
+
 /** Transport / costs on a business trip (excluding flights) */
 export const TRIP_TRANSPORT_TYPES = [
   { value: 'fuel', label: 'Fuel refill (liters × count)' },
   { value: 'car', label: 'Car / vehicle (km × EF)' },
   { value: 'grab', label: 'Ride-hail / Taxi' },
   { value: 'train', label: 'Train / coach' },
+  { value: 'ev', label: 'EV Transportation' },
   { value: 'ground', label: 'Other (km × EF)' },
 ]
