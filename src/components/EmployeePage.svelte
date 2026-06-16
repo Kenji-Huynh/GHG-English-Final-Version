@@ -573,10 +573,10 @@
             <th>Trip</th>
             <th>Route</th>
             <th>Date</th>
-            <th>Flight</th>
-            <th>Ground</th>
-            <th>Hotel</th>
-            <th>Total (kg)</th>
+            <th class="num">Flight (kg)</th>
+            <th class="num">Ground (kg)</th>
+            <th class="num">Hotel (kg)</th>
+            <th class="num">Total (kg)</th>
             <th></th>
           </tr>
         </thead>
@@ -630,14 +630,25 @@
                 </td>
                 <td style="font-size:11px">{t.from || '—'} → {t.to || '—'}</td>
                 <td style="font-size:11px">{t.dateFrom || '—'}</td>
-                <td style="font-size:11px;font-family:var(--mono)">{legSummary}{#if ptSummary}<br /><span style="color:var(--text3)">{ptSummary}</span>{/if}</td>
-                <td class="num">{t.co2Air || 0}</td>
-                <td class="num">{t.co2Ground || 0}</td>
+                <td class="num" style="font-size:11px">
+                  {t.co2Air || 0}
+                  {#if legSummary !== '—'}
+                    <br /><span style="color:var(--text3);font-weight:400;font-family:var(--mono)">{legSummary}</span>
+                  {/if}
+                </td>
+                <td class="num" style="font-size:11px">
+                  {t.co2Ground || 0}
+                  {#if ptSummary}
+                    <br /><span style="color:var(--text3);font-weight:400">{ptSummary}</span>
+                  {/if}
+                </td>
                 <td class="num" style="font-size:11px">
                   {t.co2Hotel || 0}
-                  {#if hotelSummary !== '—'}<br /><span style="color:var(--text3);font-weight:400">{hotelSummary}</span>{/if}
+                  {#if hotelSummary !== '—'}
+                    <br /><span style="color:var(--text3);font-weight:400">{hotelSummary}</span>
+                  {/if}
                 </td>
-                <td>
+                <td class="num">
                   <span
                     class="badge {t.co2Total > 500 ? 'badge-r' : t.co2Total > 100 ? 'badge-a' : 'badge-g'}"
                     >{t.co2Total} kg</span
